@@ -84,7 +84,7 @@ func InitProject() error {
 		f.Close()
 	}
 
-	fmt.Println("✅ Project structure initialized successfully!")
+	fmt.Println("Project structure initialized successfully!")
 	return nil
 }
 
@@ -103,7 +103,7 @@ func InitGoModules() error {
 		}
 	}
 
-	fmt.Println("✅ Go modules initialized successfully!")
+	fmt.Println("Go modules initialized successfully!")
 	return nil
 }
 
@@ -122,7 +122,7 @@ func Build() error {
 		}
 	}
 
-	fmt.Println("✅ Build completed successfully!")
+	fmt.Println("Build completed successfully!")
 	return nil
 }
 
@@ -147,7 +147,7 @@ func Test() error {
 		}
 	}
 
-	fmt.Println("✅ All tests completed successfully!")
+	fmt.Println("All tests completed successfully!")
 	return nil
 }
 
