@@ -136,11 +136,19 @@ kubectl delete secret db-secret
 ### **2⃣ Create a New Secret**
 ```sh
 kubectl create secret generic db-secret \
-  --from-literal=DB_HOST=ep-morning-bar-a8d00toz-pooler.eastus2.azure.neon.tech \
-  --from-literal=DB_USER=NeetChamp_owner \
-  --from-literal=DB_PASSWORD=npg_U2NlWGCgTu8t \
+  --from-literal=DB_HOST= \
+  --from-literal=DB_USER= \
+  --from-literal=DB_PASSWORD= \
   --from-literal=DB_NAME=NeetChamp \
   --from-literal=DB_PORT=5432
+```
+
+```sh
+kubectl create secret generic redis-secret \
+  --from-literal=REDIS_HOST= \
+  --from-literal=REDIS_PORT=6379 \
+  --from-literal=REDIS_PASSWORD= \
+  --from-literal=REDIS_TLS=true
 ```
 
 ### **3⃣ Verify Secret Creation**
@@ -218,13 +226,91 @@ message LogoutResponse {
 
 ---
 
-## 📈 Next Steps
+## 🏗️ Deploying to AWS EKS
+
+### **1️⃣ Install AWS CLI & eksctl**
+```sh
+curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+sudo installer -pkg AWSCLIV2.pkg -target /
+
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+```
+
+### **2️⃣ Configure AWS CLI**
+```sh
+aws configure
+```
+Enter AWS credentials and verify:
+```sh
+aws sts get-caller-identity
+```
+
+### **3️⃣ Create an EKS Cluster**
+```sh
+eksctl create cluster --name auth-cluster --region us-east-1 --nodegroup-name auth-nodes --node-type t3.medium --nodes 3
+```
+
+### **4️⃣ Deploy Auth Service on EKS**
+```sh
+kubectl apply -f deployment/k8s/auth-service-deployment.yaml
+kubectl expose deployment auth-service --type=LoadBalancer --port=50051 --target-port=50051
+```
+
+### **5️⃣ Get Load Balancer External IP**
+```sh
+kubectl get services
+```
+Use the **EXTERNAL-IP** in load testing.
+
+### **6️⃣ Run Load Test with `ghz`**
+```sh
+ghz --insecure --proto shared-libs/proto/auth.proto --call auth.AuthService/LoginUser -d '{ "email": "john@example.com", "password": "password123" }' -n 10000 -c 100 --connections=100 <EXTERNAL-IP>:50051
+```
+
+### **7️⃣ Check Load Balancing & Resource Usage**
+```sh
+kubectl top pods
+```
+
+### **8️⃣ Enable Auto-Scaling on EKS**
+```sh
+kubectl autoscale deployment auth-service --cpu-percent=50 --min=2 --max=10
+kubectl get hpa
+```
+
+### **9️⃣ Delete Cluster (When Done)**
+```sh
+eksctl delete cluster --name auth-cluster
+```
+
+---
+
+## 📊 Load Testing with `ghz`
+
+### **1️⃣ Install `ghz`**
+```sh
+wget https://github.com/bojand/ghz/releases/download/v0.108.0/ghz-linux-amd64
+chmod +x ghz-linux-amd64
+sudo mv ghz-linux-amd64 /usr/local/bin/ghz
+```
+
+### **2️⃣ Run Load Test**
+```sh
+ghz --insecure --proto shared-libs/proto/auth.proto --call auth.AuthService/LoginUser -d '{ "email": "john@example.com", "password": "password123" }' -n 10000 -c 100 --connections=100 <EXTERNAL-IP>:50051
+```
+
+---
+
+## 📌 Next Steps
+🔹 Ensure **all replicas are utilized** using `--connections=100` in `ghz`.
+🔹 Deploy on **AWS EKS** to leverage real **multi-node scaling**.
 🔹 Implement **refresh tokens** for better security.
-🔹 Improve **database indexing** for faster queries.
 🔹 Set up **CI/CD pipeline** using GitHub Actions.
 
 ---
 
-## 📝 License
+## 📄 License
 MIT License © 2025 Aditya Pratap Singh
 
+---

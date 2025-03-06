@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/Aditya-PS-05/NeetChamp/auth-service/models"
-	// "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -15,10 +15,10 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal("❌ Error loading .env file")
-	// }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("❌ Error loading .env file")
+	}
 
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=require",

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: auth-service
 spec:
-  replicas: 5
+  replicas: 5  # Keep as per load requirements
   selector:
     matchLabels:
       app: auth-service
@@ -73,8 +73,8 @@ metadata:
 spec:
   selector:
     app: auth-service
+  type: LoadBalancer  # ✅ Change to LoadBalancer for AWS EKS
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 50051
-  type: ClusterIP
+    - protocol: TCP
+      port: 50051  # External port
+      targetPort: 50051  # Pod container port
