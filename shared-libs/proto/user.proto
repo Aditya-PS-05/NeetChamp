@@ -18,6 +18,12 @@ message GetUserResponse {
   string name = 2;
   string email = 3;
   string role = 4;
+
+  // Differentiate Mentee and Admin using oneof
+  oneof user_details {
+    Mentee mentee = 5;
+    Admin admin = 6;
+  }
 }
 
 message UpdateUserRequest {
@@ -25,6 +31,11 @@ message UpdateUserRequest {
   string name = 2;
   string email = 3;
   string role = 4;
+
+  oneof user_update_details {
+    Mentee mentee = 5;
+    Admin admin = 6;
+  }
 }
 
 message UpdateUserResponse {
@@ -37,4 +48,21 @@ message DeleteUserRequest {
 
 message DeleteUserResponse {
   string message = 1;
+}
+
+// Mentee-specific fields
+message Mentee {
+  int32 experience = 1;
+  int32 level = 2;
+  int32 current_streak = 3;
+  int32 longest_streak = 4;
+  int32 quizzes_played = 5;
+  int32 correct_answers = 6;
+  string badges = 7;
+}
+
+// Admin-specific fields
+message Admin {
+  string permissions = 1;
+  int32 managed_users = 2;
 }
