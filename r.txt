@@ -1,0 +1,40 @@
+
+Summary:
+  Count:	100000
+  Total:	1523.57 s
+  Slowest:	20.01 s
+  Fastest:	418.51 ms
+  Average:	15.19 s
+  Requests/sec:	65.64
+
+Response time histogram:
+  418.512   [1]     |
+  2377.285  [412]   |∎
+  4336.058  [600]   |∎
+  6294.830  [843]   |∎
+  8253.603  [1364]  |∎∎
+  10212.376 [2693]  |∎∎∎
+  12171.149 [6514]  |∎∎∎∎∎∎∎∎
+  14129.922 [18719] |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  16088.695 [31851] |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  18047.468 [16397] |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  20006.241 [13037] |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+
+Latency distribution:
+  10 % in 11.45 s 
+  25 % in 13.56 s 
+  50 % in 14.91 s 
+  75 % in 16.80 s 
+  90 % in 18.50 s 
+  95 % in 19.15 s 
+  99 % in 19.78 s 
+
+Status code distribution:
+  [OK]                 92431 responses   
+  [DeadlineExceeded]   7374 responses    
+  [Unknown]            195 responses     
+
+Error distribution:
+  [7374]   rpc error: code = DeadlineExceeded desc = context deadline exceeded   
+  [195]    rpc error: code = Unknown desc = invalid credentials                  
+

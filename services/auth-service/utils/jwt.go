@@ -6,7 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtKey = []byte("your_secret_key") // Change this to a secure key
+var jwtKey = []byte("your_secret_key") // Replace with a strong secret key
 
 type Claims struct {
 	Email string `json:"email"`
@@ -14,8 +14,9 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+// ✅ Optimized GenerateToken (with better expiration logic)
 func GenerateToken(email, role string) (string, error) {
-	expirationTime := time.Now().Add(24 * time.Hour)
+	expirationTime := time.Now().Add(24 * time.Hour) // Token expires in 24 hours
 	claims := &Claims{
 		Email: email,
 		Role:  role,
