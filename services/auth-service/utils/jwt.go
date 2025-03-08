@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -14,7 +15,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// ✅ Optimized GenerateToken (with better expiration logic)
+// ✅ Generate JWT token
 func GenerateToken(email, role string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour) // Token expires in 24 hours
 	claims := &Claims{
@@ -27,4 +28,28 @@ func GenerateToken(email, role string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtKey)
+}
+
+// ✅ Verify JWT token
+func VerifyToken(tokenString string) (*Claims, error) {
+	claims := &Claims{}
+
+	// Parse and validate token
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid signing method")
+		}
+		return jwtKey, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Check token validity
+	if !token.Valid {
+		return nil, errors.New("invalid token")
+	}
+
+	return claims, nil
 }

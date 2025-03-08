@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package auth;
+option go_package = "github.com/Aditya-PS-05/NeetChamp/shared-libs/proto/auth";
+
+import "google/api/annotations.proto";
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/register"
+      body: "*"
+    };
+  }
+
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/login"
+      body: "*"
+    };
+  }
+
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/logout"
+      body: "*"
+    };
+  }
+
+  rpc GetAuthUser(GetAuthUserRequest) returns (GetAuthUserResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/user/{user_id}"
+    };
+  }
+}
+
+message GetAuthUserRequest {
+  string user_id = 1;
+}
+
+message GetAuthUserResponse {
+  string user_id = 1;
+  string name = 2;
+  string email = 3;
+  string role = 4;
+}
+
+message RegisterRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+  string role = 4;
+}
+
+message RegisterResponse {
+  string user_id = 1;
+  string message = 2;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message LogoutRequest {
+  string token = 1;
+}
+
+message LogoutResponse {
+  string message = 1;
+}

@@ -8,7 +8,7 @@ import (
 	"github.com/Aditya-PS-05/NeetChamp/auth-service/controllers"
 	"github.com/Aditya-PS-05/NeetChamp/auth-service/database"
 	"github.com/Aditya-PS-05/NeetChamp/auth-service/utils"
-	"github.com/Aditya-PS-05/NeetChamp/shared-libs/proto"
+	"github.com/Aditya-PS-05/NeetChamp/shared-libs/proto/auth"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -29,7 +29,7 @@ func main() {
 	grpcServer := grpc.NewServer(
 		grpc.MaxConcurrentStreams(2000), // Allow 200 parallel requests
 	)
-	proto.RegisterAuthServiceServer(grpcServer, &controllers.AuthServiceServer{})
+	auth.RegisterAuthServiceServer(grpcServer, &controllers.AuthServiceServer{})
 
 	// 🔹 Enable gRPC reflection
 	reflection.Register(grpcServer)
