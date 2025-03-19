@@ -314,3 +314,83 @@ ghz --insecure --proto shared-libs/proto/auth.proto --call auth.AuthService/Logi
 MIT License © 2025 Aditya Pratap Singh
 
 ---
+
+
+### Database Structure for auth service
+
+ 
+
+
+ 
+
+``` SQL query
+ 
+
+CREATE TABLE users (
+ 
+
+    id SERIAL PRIMARY KEY,
+ 
+
+    email VARCHAR(255) UNIQUE NOT NULL,
+ 
+
+    password_hash VARCHAR(255),
+ 
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ 
+
+    last_login_at TIMESTAMP,
+ 
+
+	CONSTRAINT valid_email CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
+ 
+
+);
+ 
+
+
+ 
+
+CREATE TABLE auth_providers (
+ 
+
+    id SERIAL PRIMARY KEY,
+ 
+
+    user_id INTEGER NOT NULL REFERENCES users(id),
+ 
+
+    provider VARCHAR(50) CHECK (provider IN ('google','phone', 'email')),
+ 
+
+    provider_user_id VARCHAR(255),
+ 
+
+    access_token TEXT,
+ 
+
+    refresh_token TEXT,
+ 
+
+    expires_at TIMESTAMP,
+ 
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ 
+
+    UNIQUE (provider, provider_user_id),
+ 
+
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+ 
+
+);
+ 
+
+```
+ 
+
+
+ 
