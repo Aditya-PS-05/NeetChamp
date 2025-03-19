@@ -58,13 +58,12 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	case httpMethod == "POST" && strings.Contains(request.Body, "quiz_id"):
 		return handlers.AddQuestion(request)
 
-	// PUT /api/question/{questionId}/update
-	case httpMethod == "PUT" && strings.Contains(path, "/update"):
-		return handlers.UpdateQuestion(request)
-
 	// DELETE /api/question/{questionId}/delete
 	case httpMethod == "DELETE" && strings.Contains(path, "/delete"):
 		return handlers.DeleteQuestion(request)
+
+	default:
+		return handlers.UpdateQuestion(request)
 	}
 
 	// Check for question ID in path parameters
